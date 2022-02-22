@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+  publisher-service:
+    build:
+      context: .
+    image: publisher-service
+    container_name: publisher-service
+    ports:
+      - "9000:80"
+      - "9100:443"
+      
+networks:
+  default:
+    external: true
+    name: message-broker-evaluation-network
