@@ -1,0 +1,37 @@
+version: '3.4'
+
+services:
+
+  publisher-service:
+    build:
+      context: .
+      dockerfile: PublisherService/Dockerfile
+    image: publisher-service
+    container_name: publisher-service
+    ports:
+      - "9000:80"
+      - "9100:443"
+    networks:
+      - rabbitmq
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - rabbitmq
+
+  rabbitmq-consumer-service:
+    build:
+      context: .
+      dockerfile: RabbitMQConsumerService/Dockerfile
+    image: rabbitmq-consumer-service
+    container_name: rabbitmq-consumer-service
+    networks:
+      - rabbitmq
+      
+networks:
+  rabbitmq:
+    name: rabbitmq

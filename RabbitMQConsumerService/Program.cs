@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using EasyNetQ;
 using Shared;
 
@@ -6,18 +7,21 @@ namespace RabbitMQConsumerService
 {
     class Program
     {
+        private static readonly AutoResetEvent waitHandle = new AutoResetEvent(false);  
+        private static readonly int maxRetryCount = 100;
+        private static readonly int retryDelayInMs = 1000;
+        private static readonly string connectionString = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development"
+            ? "username=guest;password=guest;host=localhost"
+            : "username=guest;password=guest;host=rabbitmq";
+
         static void Main(string[] args) 
         {
-            var connectionString = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development"
-                ? "username=guest;password=guest;host=localhost"
-                : "username=guest;password=guest;host=rabbitmq";
-
             using (var bus = RabbitHutch.CreateBus(connectionString)) 
             {
                 var messageBus = new EasyNetQMessageBus(bus);
-                messageBus.Subscribe<Message, MessageHandler>(new MessageHandler());
+                messageBus.TrySubscribe<Message, MessageHandler>(new MessageHandler(), maxRetryCount, retryDelayInMs);
                 Console.WriteLine("Listening for messages...");
-                Console.ReadLine();
+                waitHandle.WaitOne();
             }
         }
     }
