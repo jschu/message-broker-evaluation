@@ -1,6 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Shared;
 
 namespace PublisherService.Controllers
 {
@@ -9,16 +10,21 @@ namespace PublisherService.Controllers
     public class EvaluationController : ControllerBase
     {
         private readonly ILogger<EvaluationController> logger;
+        private readonly IMessageBus messageBus;
 
-        public EvaluationController(ILogger<EvaluationController> logger)
+        public EvaluationController(ILogger<EvaluationController> logger, IMessageBus messageBus)
         {
             this.logger = logger;
+            this.messageBus = messageBus;
         }
 
         [HttpPost]
-        public async Task EvaluateMessageBroker(int numberOfMessages)
+        public void EvaluateRabbitMQ(int numberOfMessages)
         {
-            logger.LogInformation("Received Request");
+            for (int i = 0; i < numberOfMessages; ++i)
+            {
+                messageBus.Publish<Message>(new Message(DateTime.Now, i == numberOfMessages - 1));
+            }
         }
     }
 }

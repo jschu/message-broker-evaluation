@@ -4,6 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using EasyNetQ;
+using Shared;
 
 namespace PublisherService
 {
@@ -27,6 +29,14 @@ namespace PublisherService
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "PublisherService", Version = "v1" });
             });
+            
+            services.AddScoped<IMessageBus, EasyNetQMessageBus>();
+
+            services.AddSingleton(
+                RabbitHutch.CreateBus(
+                    Configuration.GetSection("RabbitMQ")["ConnectionString"]
+                )
+            );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
