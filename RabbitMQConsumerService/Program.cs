@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ConsumerService
+namespace RabbitMQConsumerService
 {
     class Program
     {

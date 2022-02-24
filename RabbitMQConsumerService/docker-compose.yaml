@@ -4,8 +4,8 @@ services:
   consumer-service:
     build:
       context: .
-    image: consumer-service
-    container_name: consumer-service
+    image: rabbitmq-consumer-service
+    container_name: rabbitmq-consumer-service
       
 networks:
   default:
