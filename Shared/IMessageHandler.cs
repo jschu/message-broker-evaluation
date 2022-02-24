@@ -4,6 +4,6 @@ namespace Shared
 {
     public interface IMessageHandler<TMessage>
     {
-        public Task Invoke(TMessage message);
+        public void Invoke(TMessage message);
     }
 }

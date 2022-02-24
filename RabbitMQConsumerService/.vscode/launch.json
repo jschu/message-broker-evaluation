@@ -9,8 +9,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/bin/Debug/net5.0/ConsumerService.dll",
+            "program": "${workspaceFolder}/bin/Debug/net5.0/RabbitMQConsumerService.dll",
             "args": [],
+            "environment": [{ "name": "ASPNETCORE_ENVIRONMENT", "value": "Development" }],
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
             "stopAtEntry": false

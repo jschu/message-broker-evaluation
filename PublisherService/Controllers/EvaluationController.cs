@@ -18,7 +18,7 @@ namespace PublisherService.Controllers
             this.messageBus = messageBus;
         }
 
-        [HttpPost]
+        [HttpPost("rabbitmq")]
         public void EvaluateRabbitMQ(int numberOfMessages)
         {
             for (int i = 0; i < numberOfMessages; ++i)
