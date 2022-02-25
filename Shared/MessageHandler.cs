@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Shared;
 
-namespace RabbitMQConsumerService
+namespace Shared
 {
     public class MessageHandler : IMessageHandler<Message>
     {

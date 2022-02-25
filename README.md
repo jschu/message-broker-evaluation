@@ -14,6 +14,7 @@ You can access the PublisherService to start sending messages at [http://127.0.0
 The results are logged in the respective consumer service.
 ```bash
 docker logs -f rabbitmq-consumer-service
+docker logs -f kafka-consumer-service
 ```
 
 ## Teardown
