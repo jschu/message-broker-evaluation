@@ -3,7 +3,7 @@ using Shared;
 
 namespace RabbitMQConsumerService
 {
-    public static class ExtensionMethods
+    public static class MessageBusExtensions
     {
         public static void TrySubscribe<TMessage, TMessageHandler>(this IMessageBus messageBus, TMessageHandler messageHandler, int maxRetryCount, int retryDelayInMs)
            where TMessageHandler : IMessageHandler<TMessage>
@@ -26,7 +26,7 @@ namespace RabbitMQConsumerService
                     }
                     ++currentRetryCount;
                     Console.WriteLine("Sleep");
-                    //System.Threading.Thread.Sleep(retryDelayInMs);
+                    System.Threading.Thread.Sleep(retryDelayInMs);
                 }
             }
         }
