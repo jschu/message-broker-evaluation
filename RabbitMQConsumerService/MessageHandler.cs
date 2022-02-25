@@ -5,7 +5,7 @@ namespace RabbitMQConsumerService
 {
     public class MessageHandler : IMessageHandler<Message>
     {
-        private readonly string timeFormat = "hh:mm:ss.fff";
+        private readonly string timeFormat = "hh:mm:ss.ffffff";
         private int messageNumber = 1;
 
         public void Invoke(Message message)
