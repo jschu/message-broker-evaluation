@@ -8,21 +8,21 @@ services:
       dockerfile: PublisherService/Dockerfile
     image: publisher-service
     container_name: publisher-service
-    ports:
-      - 9000:80
-      - 9100:443
     networks:
       - rabbitmq
       - kafka
+    ports:
+      - 9000:80
+      - 9100:443
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
     container_name: rabbitmq
+    networks:
+      - rabbitmq
     ports:
       - 5672:5672
       - 15672:15672
-    networks:
-      - rabbitmq
 
   rabbitmq-consumer-service:
     build:
