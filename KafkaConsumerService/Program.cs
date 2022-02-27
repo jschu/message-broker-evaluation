@@ -8,7 +8,7 @@ namespace KafkaConsumerService
     class Program
     {
         private static readonly string kafkaServer = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development"
-            ? "localhost:9092"
+            ? "localhost:19092"
             : "kafka:9092";
 
         static void Main(string[] args)

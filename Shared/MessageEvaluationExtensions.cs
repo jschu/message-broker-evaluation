@@ -36,8 +36,10 @@ namespace Shared
             return Math.Round(standardDeviation, precision);
         }
 
-        public static int Throughput(this List<MessageEvaluation> evaluations, DateTime firstMessageSent, DateTime lastMessageReceived)
+        public static int Throughput(this List<MessageEvaluation> evaluations)
         {
+            DateTime firstMessageSent = evaluations.Select(eval => eval.Sent).Min();
+            DateTime lastMessageReceived = evaluations.Select(eval => eval.Received).Max();
             double durationAllMessages = lastMessageReceived.Subtract(firstMessageSent).Ticks / (double) TimeSpan.TicksPerSecond;
             double throughput = evaluations.Count / durationAllMessages;
             return (int) throughput;

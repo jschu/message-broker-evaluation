@@ -25,7 +25,7 @@ namespace Shared
                 Console.WriteLine($"Latency Median: {evaluations.LatencyMedian()}ms");
                 Console.WriteLine($"Latency Average: {evaluations.LatencyAverage()}ms");
                 Console.WriteLine($"Latency Standard Deviation: {evaluations.LatencyStandardDeviation()}ms");
-                Console.WriteLine($"Throughput: {evaluations.Throughput(firstMessageSent, message.Timestamp)} Messages / s");
+                Console.WriteLine($"Throughput: {evaluations.Throughput()} Messages / s");
                 evaluations.Clear();
                 Console.WriteLine("---");
             }
