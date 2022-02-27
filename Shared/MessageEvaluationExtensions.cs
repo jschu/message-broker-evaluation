@@ -7,6 +7,7 @@ namespace Shared
     public static class MessageEvaluationExtensions
     {
         private static int precision = 4;
+        private static int throughputPrecision = 2;
 
         public static double LatencyMedian(this IEnumerable<MessageEvaluation> evaluations)
         {
@@ -59,13 +60,13 @@ namespace Shared
             return Math.Round(standardDeviation, precision);
         }
 
-        public static int Throughput(this IEnumerable<MessageEvaluation> evaluations)
+        public static double Throughput(this IEnumerable<MessageEvaluation> evaluations)
         {
             DateTime firstMessageSent = evaluations.Select(eval => eval.Sent).Min();
             DateTime lastMessageReceived = evaluations.Select(eval => eval.Received).Max();
             double durationAllMessages = lastMessageReceived.Subtract(firstMessageSent).Ticks / (double) TimeSpan.TicksPerSecond;
             double throughput = evaluations.Count() / durationAllMessages;
-            return (int) throughput;
+            return Math.Round(throughput, throughputPrecision);
         }
     }
 }

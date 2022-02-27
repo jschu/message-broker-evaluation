@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -24,16 +25,18 @@ namespace PublisherService.Controllers
         }
 
         [HttpPost("rabbitmq")]
-        public string EvaluateRabbitMQ(int numberOfMessages)
+        public string EvaluateRabbitMQ(int numberOfMessages, int sizeOfMessageInKB)
         {
+            var messageData = CreateMessageData(sizeOfMessageInKB);
             return PublishMessages(numberOfMessages, (messageNumber) =>
             {
-                messageBus.Publish<Message>(CreateMessage(messageNumber, numberOfMessages));
+                var message = CreateMessage(messageNumber, numberOfMessages, messageData);
+                messageBus.Publish<Message>(message);
             });
         }
 
         [HttpPost("kafka")]
-        public string EvaluateKafka(int numberOfMessages)
+        public string EvaluateKafka(int numberOfMessages, int sizeOfMessageInKB)
         {
             var producerConfig = new ProducerConfig
             {
@@ -44,9 +47,11 @@ namespace PublisherService.Controllers
             producerBuilder.SetValueSerializer(new MessageSerializer());
             using (var producer = producerBuilder.Build())
             {
+                var messageData = CreateMessageData(sizeOfMessageInKB);
                 return PublishMessages(numberOfMessages, (messageNumber) =>
                 {
-                    producer.ProduceAsync(Constants.Topic, new Confluent.Kafka.Message<Null, Message> { Value = CreateMessage(messageNumber, numberOfMessages) });
+                    var message = CreateMessage(messageNumber, numberOfMessages, messageData);
+                    producer.ProduceAsync(Constants.Topic, new Confluent.Kafka.Message<Null, Message> { Value = message });
                 });
             }
         }
@@ -67,9 +72,21 @@ namespace PublisherService.Controllers
             return $"Successfully published {numberOfMessages} messages";
         }
 
-        private Message CreateMessage(int messageNumber, int numberOfMessages)
+        private Message CreateMessage(int messageNumber, int numberOfMessages, List<byte[]> messageData)
         {
-            return new Message(DateTime.Now, messageNumber == numberOfMessages - 1);
+            return new Message(DateTime.Now, messageNumber == numberOfMessages - 1, messageData);
+        }
+
+        private List<byte[]> CreateMessageData(int sizeOfMessageInKB)
+        {
+            var data = new List<byte[]>();
+
+            for (int i = 0; i < sizeOfMessageInKB; ++i)
+            {
+                byte[] dataBlock = new byte[1024];
+                data.Add(dataBlock);
+            }
+            return data;
         }
     }
 }
