@@ -1,7 +1,7 @@
 # Message Broker Evaluation
 
-## Setup
-This project requires [Docker](https://docs.docker.com/get-docker/).
+## Prerequisites
+This project requires [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/).
 
 ## Start services
 To start all services run the deploy script.
