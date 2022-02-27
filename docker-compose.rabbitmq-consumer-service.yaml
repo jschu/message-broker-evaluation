@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+
+  rabbitmq-consumer-service:
+    build:
+      context: .
+      dockerfile: RabbitMQConsumerService/Dockerfile
+    image: rabbitmq-consumer-service
+    container_name: rabbitmq-consumer-service
+    networks:
+      - rabbitmq
+
+networks:
+  rabbitmq:
+    external: true

@@ -8,7 +8,10 @@ ROOT_DIR=${SCRIPT_DIR}/../
 docker network create rabbitmq || true
 docker network create kafka || true
 
-docker-compose -f ${ROOT_DIR}/docker-compose.yaml up -d --build
+docker-compose -f ${ROOT_DIR}/docker-compose.publisher-service.yaml up -d --build
+docker-compose -f ${ROOT_DIR}/docker-compose.rabbitmq.yaml up -d --build
+docker-compose -f ${ROOT_DIR}/docker-compose.rabbitmq-consumer-service.yaml up -d --build
+docker-compose -f ${ROOT_DIR}/docker-compose.kafka.yaml up -d --build
 
 echo ""
 echo "Waiting for Kafka broker to start"

@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+
+  publisher-service:
+    build:
+      context: .
+      dockerfile: PublisherService/Dockerfile
+    image: publisher-service
+    container_name: publisher-service
+    networks:
+      - rabbitmq
+      - kafka
+    ports:
+      - 9000:80
+      - 9100:443
+
+networks:
+  rabbitmq:
+    external: true
+  kafka:
+    external: true

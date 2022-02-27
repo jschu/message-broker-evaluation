@@ -2,37 +2,6 @@ version: '3.4'
 
 services:
 
-  publisher-service:
-    build:
-      context: .
-      dockerfile: PublisherService/Dockerfile
-    image: publisher-service
-    container_name: publisher-service
-    networks:
-      - rabbitmq
-      - kafka
-    ports:
-      - 9000:80
-      - 9100:443
-
-  rabbitmq:
-    image: rabbitmq:3-management-alpine
-    container_name: rabbitmq
-    networks:
-      - rabbitmq
-    ports:
-      - 5672:5672
-      - 15672:15672
-
-  rabbitmq-consumer-service:
-    build:
-      context: .
-      dockerfile: RabbitMQConsumerService/Dockerfile
-    image: rabbitmq-consumer-service
-    container_name: rabbitmq-consumer-service
-    networks:
-      - rabbitmq
-
   zookeeper:
     image: confluentinc/cp-zookeeper:7.0.1
     container_name: zookeeper
@@ -61,7 +30,5 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
 networks:
-  rabbitmq:
-    external: true
   kafka:
     external: true
