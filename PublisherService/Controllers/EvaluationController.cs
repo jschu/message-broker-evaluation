@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Shared;
-using Confluent.Kafka;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Confluent.Kafka;
+using Shared;
 using Shared.Kafka;
 
 namespace PublisherService.Controllers
@@ -25,16 +24,16 @@ namespace PublisherService.Controllers
         }
 
         [HttpPost("rabbitmq")]
-        public void EvaluateRabbitMQ(int numberOfMessages)
+        public string EvaluateRabbitMQ(int numberOfMessages)
         {
-            for (int i = 0; i < numberOfMessages; ++i)
+            return PublishMessages(numberOfMessages, (messageNumber) =>
             {
-                messageBus.Publish<Message>(new Message(DateTime.Now, i == numberOfMessages - 1));
-            }
+                messageBus.Publish<Message>(CreateMessage(messageNumber, numberOfMessages));
+            });
         }
 
         [HttpPost("kafka")]
-        public void EvaluateKafka(int numberOfMessages)
+        public string EvaluateKafka(int numberOfMessages)
         {
             var producerConfig = new ProducerConfig
             {
@@ -45,12 +44,32 @@ namespace PublisherService.Controllers
             producerBuilder.SetValueSerializer(new MessageSerializer());
             using (var producer = producerBuilder.Build())
             {
-                for (int i = 0; i < numberOfMessages; ++i)
+                return PublishMessages(numberOfMessages, (messageNumber) =>
                 {
-                    var message = new Message(DateTime.Now, i == numberOfMessages - 1);
-                    producer.ProduceAsync(Constants.Topic, new Confluent.Kafka.Message<Null, Message> { Value = message });
+                    producer.ProduceAsync(Constants.Topic, new Confluent.Kafka.Message<Null, Message> { Value = CreateMessage(messageNumber, numberOfMessages) });
+                });
+            }
+        }
+
+        private string PublishMessages(int numberOfMessages, Action<int> PublishAction)
+        {
+            for (int i = 0; i < numberOfMessages; ++i)
+            {
+                try
+                {
+                    PublishAction(i);
+                }
+                catch (Exception e)
+                {
+                    return e.Message;
                 }
             }
+            return $"Successfully published {numberOfMessages} messages";
+        }
+
+        private Message CreateMessage(int messageNumber, int numberOfMessages)
+        {
+            return new Message(DateTime.Now, messageNumber == numberOfMessages - 1);
         }
     }
 }
