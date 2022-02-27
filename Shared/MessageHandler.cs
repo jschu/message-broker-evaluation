@@ -22,12 +22,14 @@ namespace Shared
             }
             if (message.LastMessage)
             {
+                Console.WriteLine($"Latency Lower Quartile: {evaluations.LatencyLowerQuartile()}ms");
                 Console.WriteLine($"Latency Median: {evaluations.LatencyMedian()}ms");
+                Console.WriteLine($"Latency Upper Quartile: {evaluations.LatencyUpperQuartile()}ms");
                 Console.WriteLine($"Latency Average: {evaluations.LatencyAverage()}ms");
                 Console.WriteLine($"Latency Standard Deviation: {evaluations.LatencyStandardDeviation()}ms");
                 Console.WriteLine($"Throughput: {evaluations.Throughput()} Messages / s");
-                evaluations.Clear();
                 Console.WriteLine("---");
+                evaluations.Clear();
             }
             messageNumber = message.LastMessage ? 1 : messageNumber + 1;
         }

@@ -7,7 +7,8 @@ namespace Shared
     public static class MessageEvaluationExtensions
     {
         private static int precision = 4;
-        public static double LatencyMedian(this List<MessageEvaluation> evaluations)
+
+        public static double LatencyMedian(this IEnumerable<MessageEvaluation> evaluations)
         {
             var sortedLatencies = evaluations.Select(eval => eval.Latency).OrderBy(l => l).ToList();
             int size = sortedLatencies.Count();
@@ -18,30 +19,52 @@ namespace Shared
             return Math.Round(median, precision);
         }
 
-        public static double LatencyAverage(this List<MessageEvaluation> evaluations)
+        public static double LatencyLowerQuartile(this IEnumerable<MessageEvaluation> evaluations)
         {
-            double average = evaluations.Select(eval => eval.Latency).Sum() / evaluations.Count;
+            double median = evaluations.LatencyMedian();
+            if (evaluations.Count() == 1)
+            {
+                return median;
+            }
+            double lowerQuartile = evaluations.Where(eval => eval.Latency < median).LatencyMedian();
+            return Math.Round(lowerQuartile, precision);
+        }
+
+        public static double LatencyUpperQuartile(this IEnumerable<MessageEvaluation> evaluations)
+        {
+            double median = evaluations.LatencyMedian();
+            if (evaluations.Count() == 1)
+            {
+                return median;
+            }
+            double lowerQuartile = evaluations.Where(eval => eval.Latency > median).LatencyMedian();
+            return Math.Round(lowerQuartile, precision);
+        }
+
+        public static double LatencyAverage(this IEnumerable<MessageEvaluation> evaluations)
+        {
+            double average = evaluations.Select(eval => eval.Latency).Sum() / evaluations.Count();
             return Math.Round(average, precision);
         }
 
-        public static double LatencyStandardDeviation(this List<MessageEvaluation> evaluations)
+        public static double LatencyStandardDeviation(this IEnumerable<MessageEvaluation> evaluations)
         {
-            if (evaluations.Count < 2) 
+            if (evaluations.Count() < 2) 
             {
                 return 0.0;
             }
             double latencyAverage = evaluations.LatencyAverage();
             double sumOfSquares = evaluations.Select(eval => Math.Pow(eval.Latency - latencyAverage, 2)).Sum();
-            double standardDeviation = Math.Sqrt(sumOfSquares / (evaluations.Count - 1));
+            double standardDeviation = Math.Sqrt(sumOfSquares / (evaluations.Count() - 1));
             return Math.Round(standardDeviation, precision);
         }
 
-        public static int Throughput(this List<MessageEvaluation> evaluations)
+        public static int Throughput(this IEnumerable<MessageEvaluation> evaluations)
         {
             DateTime firstMessageSent = evaluations.Select(eval => eval.Sent).Min();
             DateTime lastMessageReceived = evaluations.Select(eval => eval.Received).Max();
             double durationAllMessages = lastMessageReceived.Subtract(firstMessageSent).Ticks / (double) TimeSpan.TicksPerSecond;
-            double throughput = evaluations.Count / durationAllMessages;
+            double throughput = evaluations.Count() / durationAllMessages;
             return (int) throughput;
         }
     }
