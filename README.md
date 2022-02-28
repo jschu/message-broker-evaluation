@@ -9,6 +9,11 @@ To start all services run the deploy script.
 sh ./scripts/deploy.sh
 ```
 
+Options for deploy.sh:
+- --no-rabbitmq starts without required services to evaluate RabbitMQ
+- --no-kafka starts without required services to evaluate Apache Kafka
+- --no-publisher-service starts without Publisher Service
+
 ## Usage
 You can access the PublisherService to start sending messages at [http://127.0.0.1:9000/swagger/index.html](http://127.0.0.1:9000/swagger/index.html).  
 The results are logged in the respective consumer service.
