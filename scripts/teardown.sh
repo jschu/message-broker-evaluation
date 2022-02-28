@@ -8,9 +8,12 @@ docker-compose -f ${ROOT_DIR}/docker-compose.rabbitmq.yaml down
 docker-compose -f ${ROOT_DIR}/docker-compose.rabbitmq-consumer-service.yaml down
 docker-compose -f ${ROOT_DIR}/docker-compose.kafka.yaml down
 docker-compose -f ${ROOT_DIR}/docker-compose.kafka-consumer-service.yaml down
+docker-compose -f ${ROOT_DIR}/docker-compose.redis.yaml down
+docker-compose -f ${ROOT_DIR}/docker-compose.redis-consumer-service.yaml down
 
 docker network rm rabbitmq || true
 docker network rm kafka || true
+docker network rm redis || true
 
 echo ""
 echo "[*] Done"

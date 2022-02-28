@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+
+  redis-consumer-service:
+    build:
+      context: .
+      dockerfile: RedisConsumerService/Dockerfile
+    image: redis-consumer-service
+    container_name: redis-consumer-service
+    networks:
+      - redis
+
+networks:
+  redis:
+    external: true

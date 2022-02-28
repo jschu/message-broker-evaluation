@@ -12,6 +12,7 @@ usage()
   echo ""
   echo "  --no-rabbitmq starts without required services to evaluate RabbitMQ"
   echo "  --no-kafka starts without required services to evaluate Apache Kafka"
+  echo "  --no-redis starts without required services to evaluate Redis"
   echo "  --no-publisher-service starts without Publisher Service"
   echo ""
 }
@@ -25,6 +26,10 @@ do
       ;;
     --no-kafka)
       no_kafka="true"
+      shift
+      ;;
+    --no-redis)
+      no_redis="true"
       shift
       ;;
     --no-publisher-service)
@@ -44,6 +49,7 @@ done
 
 docker network create rabbitmq || true
 docker network create kafka || true
+docker network create redis || true
 
 if [ "${no_publisher_service}" != "true" ]; then
     docker-compose -f ${ROOT_DIR}/docker-compose.publisher-service.yaml up -d --build
@@ -52,6 +58,11 @@ fi
 if [ "${no_rabbitmq}" != "true" ]; then
     docker-compose -f ${ROOT_DIR}/docker-compose.rabbitmq.yaml up -d --build
     docker-compose -f ${ROOT_DIR}/docker-compose.rabbitmq-consumer-service.yaml up -d --build
+fi
+
+if [ "${no_redis}" != "true" ]; then
+    docker-compose -f ${ROOT_DIR}/docker-compose.redis.yaml up -d --build
+    docker-compose -f ${ROOT_DIR}/docker-compose.redis-consumer-service.yaml up -d --build
 fi
 
 if [ "${no_kafka}" != "true" ]; then

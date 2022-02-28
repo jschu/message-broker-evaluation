@@ -5,8 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Confluent.Kafka;
 using Shared;
-using Shared.Kafka;
 using Shared.RabbitMQ;
+using StackExchange.Redis;
 
 namespace PublisherService.Controllers
 {
@@ -45,16 +45,30 @@ namespace PublisherService.Controllers
             };
 
             var producerBuilder = new ProducerBuilder<Null, Message>(producerConfig);
-            producerBuilder.SetValueSerializer(new MessageSerializer());
+            producerBuilder.SetValueSerializer(new Shared.Kafka.MessageSerializer());
             using (var producer = producerBuilder.Build())
             {
                 var messageData = CreateMessageData(sizeOfMessageInKB);
                 return PublishMessages(numberOfMessages, (messageNumber) =>
                 {
                     var message = CreateMessage(messageNumber, numberOfMessages, messageData);
-                    producer.ProduceAsync(Constants.Topic, new Confluent.Kafka.Message<Null, Message> { Value = message });
+                    producer.ProduceAsync(Shared.Kafka.Constants.Topic, new Confluent.Kafka.Message<Null, Message> { Value = message });
                 });
             }
+        }
+
+        [HttpPost("redis")]
+        public string EvaluateRedis(int numberOfMessages, int sizeOfMessageInKB)
+        {
+            var redisConnection = ConnectionMultiplexer.Connect(configuration.GetSection("Redis")["Server"]);
+            var subscriber = redisConnection.GetSubscriber();
+            var messageData = CreateMessageData(sizeOfMessageInKB);
+            return PublishMessages(numberOfMessages, (messageNumber) =>
+            {
+                var message = CreateMessage(messageNumber, numberOfMessages, messageData);
+                var serializedMessage = Shared.Redis.MessageSerializer.Serialize(message);
+                subscriber.PublishAsync(Shared.Redis.Constants.Channel, serializedMessage);
+            });
         }
 
         private string PublishMessages(int numberOfMessages, Action<int> PublishAction)

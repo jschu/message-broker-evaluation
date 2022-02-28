@@ -8,5 +8,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Shared.RabbitMQ\Shared.RabbitMQ.csproj"/>
     <ProjectReference Include="..\Shared.Kafka\Shared.Kafka.csproj"/>
+    <ProjectReference Include="..\Shared.Redis\Shared.Redis.csproj"/>
   </ItemGroup>
 </Project>

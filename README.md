@@ -12,6 +12,7 @@ sh ./scripts/deploy.sh
 Options for deploy.sh:
 - --no-rabbitmq starts without required services to evaluate RabbitMQ
 - --no-kafka starts without required services to evaluate Apache Kafka
+- --no-redis starts without required services to evaluate Redis
 - --no-publisher-service starts without Publisher Service
 
 ## Usage

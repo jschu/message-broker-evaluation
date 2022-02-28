@@ -5,6 +5,7 @@ WORKDIR /src
 COPY PublisherService/PublisherService.csproj PublisherService/
 COPY Shared.RabbitMQ/Shared.RabbitMQ.csproj Shared.RabbitMQ/
 COPY Shared.Kafka/Shared.Kafka.csproj Shared.Kafka/
+COPY Shared.Redis/Shared.Redis.csproj Shared.Redis/
 COPY Shared/Shared.csproj Shared/
 RUN dotnet restore PublisherService/PublisherService.csproj
 COPY . .

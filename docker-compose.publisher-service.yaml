@@ -11,6 +11,7 @@ services:
     networks:
       - rabbitmq
       - kafka
+      - redis
     ports:
       - 9000:80
       - 9100:443
@@ -19,4 +20,6 @@ networks:
   rabbitmq:
     external: true
   kafka:
+    external: true
+  redis:
     external: true
