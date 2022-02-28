@@ -21,6 +21,7 @@ The results are logged in the respective consumer service.
 ```bash
 docker logs -f rabbitmq-consumer-service
 docker logs -f kafka-consumer-service
+docker logs -f redis-consumer-service
 ```
 
 ## Teardown
