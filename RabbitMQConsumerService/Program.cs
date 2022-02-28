@@ -2,6 +2,7 @@
 using System.Threading;
 using EasyNetQ;
 using Shared;
+using Shared.RabbitMQ;
 
 namespace RabbitMQConsumerService
 {

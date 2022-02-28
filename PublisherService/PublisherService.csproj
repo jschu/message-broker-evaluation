@@ -6,6 +6,7 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3"/>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Shared\Shared.csproj"/>
+    <ProjectReference Include="..\Shared.RabbitMQ\Shared.RabbitMQ.csproj"/>
+    <ProjectReference Include="..\Shared.Kafka\Shared.Kafka.csproj"/>
   </ItemGroup>
 </Project>

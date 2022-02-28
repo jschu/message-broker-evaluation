@@ -1,6 +1,6 @@
 using System;
 
-namespace Shared
+namespace Shared.RabbitMQ
 {
      public interface IMessageBus
     {

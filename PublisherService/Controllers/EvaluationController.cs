@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Confluent.Kafka;
 using Shared;
 using Shared.Kafka;
+using Shared.RabbitMQ;
 
 namespace PublisherService.Controllers
 {

@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using EasyNetQ;
-using Shared;
+using Shared.RabbitMQ;
 
 namespace PublisherService
 {

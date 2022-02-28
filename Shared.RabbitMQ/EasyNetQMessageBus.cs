@@ -1,7 +1,7 @@
 ﻿using System;
 using EasyNetQ;
 
-namespace Shared
+namespace Shared.RabbitMQ
 {
     public class EasyNetQMessageBus : IMessageBus
     {

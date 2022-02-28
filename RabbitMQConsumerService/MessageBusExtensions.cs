@@ -1,5 +1,6 @@
 using System;
 using Shared;
+using Shared.RabbitMQ;
 
 namespace RabbitMQConsumerService
 {
