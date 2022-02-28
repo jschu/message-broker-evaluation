@@ -3,6 +3,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
 WORKDIR /src
 COPY KafkaConsumerService/KafkaConsumerService.csproj KafkaConsumerService/
+COPY Shared.Kafka/Shared.Kafka.csproj Shared.Kafka/
 COPY Shared/Shared.csproj Shared/
 RUN dotnet restore KafkaConsumerService/KafkaConsumerService.csproj
 COPY . .

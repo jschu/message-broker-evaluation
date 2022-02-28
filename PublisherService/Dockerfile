@@ -3,6 +3,8 @@
 FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
 WORKDIR /src
 COPY PublisherService/PublisherService.csproj PublisherService/
+COPY Shared.RabbitMQ/Shared.RabbitMQ.csproj Shared.RabbitMQ/
+COPY Shared.Kafka/Shared.Kafka.csproj Shared.Kafka/
 COPY Shared/Shared.csproj Shared/
 RUN dotnet restore PublisherService/PublisherService.csproj
 COPY . .

@@ -3,6 +3,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
 WORKDIR /src
 COPY RabbitMQConsumerService/RabbitMQConsumerService.csproj RabbitMQConsumerService/
+COPY Shared.RabbitMQ/Shared.RabbitMQ.csproj Shared.RabbitMQ/
 COPY Shared/Shared.csproj Shared/
 RUN dotnet restore RabbitMQConsumerService/RabbitMQConsumerService.csproj
 COPY . .
