@@ -14,14 +14,15 @@ Options for deploy.sh:
 - --no-kafka starts without required services to evaluate Apache Kafka
 - --no-redis starts without required services to evaluate Redis
 - --no-publisher-service starts without Publisher Service
+- --rabbitmq-consumer-instances=NUM scale rabbitmq-consumer-service to NUM instances
+- --kafka-consumer-instances=NUM scale kafka-consumer-service to NUM instances
+- --redis-consumer-instances=NUM scale redis-consumer-service to NUM instances
 
 ## Usage
 You can access the PublisherService to start sending messages at [http://127.0.0.1:9000/swagger/index.html](http://127.0.0.1:9000/swagger/index.html).  
 The results are logged in the respective consumer service.
 ```bash
-docker logs -f rabbitmq-consumer-service
-docker logs -f kafka-consumer-service
-docker logs -f redis-consumer-service
+docker logs -f SERVICE
 ```
 
 ## Teardown

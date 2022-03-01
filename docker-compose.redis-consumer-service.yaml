@@ -7,7 +7,6 @@ services:
       context: .
       dockerfile: RedisConsumerService/Dockerfile
     image: redis-consumer-service
-    container_name: redis-consumer-service
     networks:
       - redis
 

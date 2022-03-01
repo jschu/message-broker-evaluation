@@ -7,7 +7,6 @@ services:
       context: .
       dockerfile: RabbitMQConsumerService/Dockerfile
     image: rabbitmq-consumer-service
-    container_name: rabbitmq-consumer-service
     networks:
       - rabbitmq
 

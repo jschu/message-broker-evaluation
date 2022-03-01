@@ -7,7 +7,6 @@ services:
       context: .
       dockerfile: KafkaConsumerService/Dockerfile
     image: kafka-consumer-service
-    container_name: kafka-consumer-service
     networks:
       - kafka
       
