@@ -16,7 +16,7 @@ namespace KafkaConsumerService
             var config = new ConsumerConfig
             {
                 BootstrapServers = kafkaServer,
-                GroupId = Shared.Kafka.Constants.GroupId,
+                GroupId = Guid.NewGuid().ToString(),
                 AutoOffsetReset = AutoOffsetReset.Earliest
             };
 
