@@ -41,7 +41,8 @@ namespace PublisherService.Controllers
         {
             var producerConfig = new ProducerConfig
             {
-                BootstrapServers = configuration.GetSection("Kafka")["Server"]
+                BootstrapServers = configuration.GetSection("Kafka")["Server"],
+                MessageMaxBytes = Shared.Kafka.Constants.MessageMaxBytes 
             };
 
             var producerBuilder = new ProducerBuilder<Null, Message>(producerConfig);

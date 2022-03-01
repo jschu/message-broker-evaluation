@@ -17,7 +17,8 @@ namespace KafkaConsumerService
             {
                 BootstrapServers = kafkaServer,
                 GroupId = Guid.NewGuid().ToString(),
-                AutoOffsetReset = AutoOffsetReset.Earliest
+                AutoOffsetReset = AutoOffsetReset.Earliest,
+                MessageMaxBytes = Constants.MessageMaxBytes
             };
 
             var consumerBuilder = new ConsumerBuilder<Ignore, Message>(config);
