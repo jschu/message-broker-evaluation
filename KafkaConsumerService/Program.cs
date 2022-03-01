@@ -25,7 +25,7 @@ namespace KafkaConsumerService
             using (var consumer = consumerBuilder.Build())
             {
                 var messageHandler = new MessageHandler();
-                consumer.Subscribe(Shared.Kafka.Constants.Topic);
+                consumer.Subscribe(Constants.Topic);
                 Console.WriteLine("Listening for messages...");
 
                 while (true)
