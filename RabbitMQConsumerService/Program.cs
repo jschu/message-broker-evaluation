@@ -8,7 +8,8 @@ namespace RabbitMQConsumerService
 {
     class Program
     {
-        private static readonly AutoResetEvent waitHandle = new AutoResetEvent(false);  
+        private static readonly AutoResetEvent waitHandle = new AutoResetEvent(false);
+        private static readonly string subscriptionId = Guid.NewGuid().ToString();
         private static readonly int maxRetryCount = 100;
         private static readonly int retryDelayInMs = 1000;
         private static readonly string connectionString = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development"
@@ -20,7 +21,7 @@ namespace RabbitMQConsumerService
             using (var bus = RabbitHutch.CreateBus(connectionString)) 
             {
                 var messageBus = new EasyNetQMessageBus(bus);
-                messageBus.TrySubscribe<Message, MessageHandler>(new MessageHandler(), maxRetryCount, retryDelayInMs);
+                messageBus.TrySubscribe<Message, MessageHandler>(subscriptionId, new MessageHandler(), maxRetryCount, retryDelayInMs);
                 Console.WriteLine("Listening for messages...");
                 waitHandle.WaitOne();
             }

@@ -6,7 +6,7 @@ namespace RabbitMQConsumerService
 {
     public static class MessageBusExtensions
     {
-        public static void TrySubscribe<TMessage, TMessageHandler>(this IMessageBus messageBus, TMessageHandler messageHandler, int maxRetryCount, int retryDelayInMs)
+        public static void TrySubscribe<TMessage, TMessageHandler>(this IMessageBus messageBus, string subscriptionId, TMessageHandler messageHandler, int maxRetryCount, int retryDelayInMs)
            where TMessageHandler : IMessageHandler<TMessage>
         {
             var success = false;
@@ -16,7 +16,7 @@ namespace RabbitMQConsumerService
             {
                 try
                 {
-                    messageBus.Subscribe<TMessage, TMessageHandler>(messageHandler);
+                    messageBus.Subscribe<TMessage, TMessageHandler>(subscriptionId, messageHandler);
                     success = true;
                 }
                 catch (Exception)
