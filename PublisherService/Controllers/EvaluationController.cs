@@ -29,9 +29,9 @@ namespace PublisherService.Controllers
         public string EvaluateRabbitMQ(int numberOfMessages, int sizeOfMessageInKB)
         {
             var messageData = CreateMessageData(sizeOfMessageInKB);
-            return PublishMessages(numberOfMessages, (messageNumber) =>
+            return PublishMessages(numberOfMessages, (messageIndex) =>
             {
-                var message = CreateMessage(messageNumber, numberOfMessages, messageData);
+                var message = CreateMessage(messageIndex, numberOfMessages, messageData);
                 messageBus.Publish<Message>(message);
             });
         }
@@ -49,9 +49,9 @@ namespace PublisherService.Controllers
             using (var producer = producerBuilder.Build())
             {
                 var messageData = CreateMessageData(sizeOfMessageInKB);
-                return PublishMessages(numberOfMessages, (messageNumber) =>
+                return PublishMessages(numberOfMessages, (messageIndex) =>
                 {
-                    var message = CreateMessage(messageNumber, numberOfMessages, messageData);
+                    var message = CreateMessage(messageIndex, numberOfMessages, messageData);
                     producer.ProduceAsync(Shared.Kafka.Constants.Topic, new Confluent.Kafka.Message<Null, Message> { Value = message });
                 });
             }
@@ -63,9 +63,9 @@ namespace PublisherService.Controllers
             var redisConnection = ConnectionMultiplexer.Connect(configuration.GetSection("Redis")["Server"]);
             var subscriber = redisConnection.GetSubscriber();
             var messageData = CreateMessageData(sizeOfMessageInKB);
-            return PublishMessages(numberOfMessages, (messageNumber) =>
+            return PublishMessages(numberOfMessages, (messageIndex) =>
             {
-                var message = CreateMessage(messageNumber, numberOfMessages, messageData);
+                var message = CreateMessage(messageIndex, numberOfMessages, messageData);
                 var serializedMessage = Shared.Redis.MessageSerializer.Serialize(message);
                 subscriber.PublishAsync(Shared.Redis.Constants.Channel, serializedMessage);
             });
@@ -87,9 +87,9 @@ namespace PublisherService.Controllers
             return $"Successfully published {numberOfMessages} messages";
         }
 
-        private Message CreateMessage(int messageNumber, int numberOfMessages, List<byte[]> messageData)
+        private Message CreateMessage(int messageIndex, int numberOfMessages, List<byte[]> messageData)
         {
-            return new Message(DateTime.Now, messageNumber == numberOfMessages - 1, messageData);
+            return new Message(DateTime.Now, messageIndex + 1, numberOfMessages, messageData);
         }
 
         private List<byte[]> CreateMessageData(int sizeOfMessageInKB)

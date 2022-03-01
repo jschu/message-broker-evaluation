@@ -5,8 +5,7 @@ namespace Shared
 {
     public class MessageHandler : IMessageHandler<Message>
     {
-        private int messageNumber = 1;
-        private DateTime firstMessageSent;
+        private int messagesReceived = 0;
         private List<MessageEvaluation> evaluations = new List<MessageEvaluation>();
 
         public void Invoke(Message message)
@@ -14,13 +13,10 @@ namespace Shared
             MessageEvaluation evaluation = new MessageEvaluation(message.Timestamp, DateTime.Now);
             evaluations.Add(evaluation);
             Console.WriteLine(
-                $"{messageNumber}. Message | Sent: {evaluation.SentTimestamp} | Received: {evaluation.ReceivedTimestamp} | Latency: {evaluation.Latency}ms"
+                $"{message.MessageNumber}. Message | Sent: {evaluation.SentTimestamp} | Received: {evaluation.ReceivedTimestamp} | Latency: {evaluation.Latency}ms"
             );
-            if (messageNumber == 1)
-            {
-                firstMessageSent = message.Timestamp;
-            }
-            if (message.LastMessage)
+            ++messagesReceived;
+            if (messagesReceived == message.NumberOfMessages)
             {
                 Console.WriteLine($"Latency Lower Quartile: {evaluations.LatencyLowerQuartile()}ms");
                 Console.WriteLine($"Latency Median: {evaluations.LatencyMedian()}ms");
@@ -30,8 +26,8 @@ namespace Shared
                 Console.WriteLine($"Throughput: {evaluations.Throughput()} Messages / s");
                 Console.WriteLine("---");
                 evaluations.Clear();
+                messagesReceived = 0;
             }
-            messageNumber = message.LastMessage ? 1 : messageNumber + 1;
         }
     }
 }
