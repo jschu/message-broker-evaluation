@@ -1,6 +1,6 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0-bookworm-slim AS build
 WORKDIR /src
 COPY RabbitMQConsumerService/RabbitMQConsumerService.csproj RabbitMQConsumerService/
 COPY Shared.RabbitMQ/Shared.RabbitMQ.csproj Shared.RabbitMQ/
@@ -12,7 +12,7 @@ RUN dotnet build RabbitMQConsumerService/RabbitMQConsumerService.csproj -c Relea
 FROM build AS publish
 RUN dotnet publish RabbitMQConsumerService/RabbitMQConsumerService.csproj -c Release -o /app/publish
 
-FROM mcr.microsoft.com/dotnet/aspnet:5.0-buster-slim AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-bookworm-slim AS base
 
 FROM base AS final
 WORKDIR /app

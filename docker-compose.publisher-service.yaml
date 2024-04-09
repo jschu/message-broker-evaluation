@@ -13,8 +13,7 @@ services:
       - kafka
       - redis
     ports:
-      - 9000:80
-      - 9100:443
+      - 9000:8080
 
 networks:
   rabbitmq:
