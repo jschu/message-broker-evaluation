@@ -13,14 +13,14 @@ namespace Shared
             evaluations.Add(evaluation);
             if (message.MessageNumber == 1)
             {
-                Console.WriteLine("Start receiving messages ...");
+                Console.WriteLine("Start receiving messages...");
             }
             // Console.WriteLine(
             //     $"{message.MessageNumber}. Message | Sent: {evaluation.SentTimestamp} | Received: {evaluation.ReceivedTimestamp} | Latency: {evaluation.Latency}ms"
             // );
             if (message.MessageNumber == message.NumberOfMessages)
             {
-                Console.WriteLine("Received 100%");
+                Console.WriteLine("Received all messages");
                 Console.WriteLine("---");
                 Console.WriteLine($"Number of Messages: {message.NumberOfMessages}");
                 Console.WriteLine($"Total Duration: {evaluations.TotalDuration()}ms");
