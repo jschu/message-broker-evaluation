@@ -74,7 +74,7 @@ namespace Shared
             DateTime firstMessageSent = evaluations.Select(eval => eval.Sent).Min();
             DateTime lastMessageReceived = evaluations.Select(eval => eval.Received).Max();
             double durationAllMessages = lastMessageReceived.Subtract(firstMessageSent).Ticks / (double) TimeSpan.TicksPerSecond;
-            return Math.Round(durationAllMessages, precision);
+            return Math.Round(durationAllMessages * 1000, precision);
         }
     }
 }
