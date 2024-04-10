@@ -46,15 +46,15 @@ namespace PublisherService.Controllers
 
             var producerBuilder = new ProducerBuilder<Null, Message>(producerConfig);
             producerBuilder.SetValueSerializer(new Shared.Kafka.MessageSerializer());
-            using (var producer = producerBuilder.Build())
+            using var producer = producerBuilder.Build();
+            var messageData = CreateMessageData(sizeOfMessageInKB);
+            var result = PublishMessages(numberOfMessages, (messageIndex) =>
             {
-                var messageData = CreateMessageData(sizeOfMessageInKB);
-                return PublishMessages(numberOfMessages, (messageIndex) =>
-                {
-                    var message = CreateMessage(messageIndex, numberOfMessages, messageData);
-                    producer.ProduceAsync(Shared.Kafka.Constants.Topic, new Confluent.Kafka.Message<Null, Message> { Value = message });
-                });
-            }
+                var message = CreateMessage(messageIndex, numberOfMessages, messageData);
+                producer.ProduceAsync(Shared.Kafka.Constants.Topic, new Message<Null, Message> { Value = message });
+            });
+            producer.Flush();
+            return result;
         }
 
         [HttpPost("redis")]
@@ -63,12 +63,14 @@ namespace PublisherService.Controllers
             var redisConnection = ConnectionMultiplexer.Connect(configuration.GetSection("Redis")["Server"]);
             var subscriber = redisConnection.GetSubscriber();
             var messageData = CreateMessageData(sizeOfMessageInKB);
-            return PublishMessages(numberOfMessages, (messageIndex) =>
+            var result = PublishMessages(numberOfMessages, (messageIndex) =>
             {
                 var message = CreateMessage(messageIndex, numberOfMessages, messageData);
                 var serializedMessage = Shared.Redis.MessageSerializer.Serialize(message);
                 subscriber.PublishAsync(Shared.Redis.Constants.Channel, serializedMessage);
             });
+            redisConnection.Dispose();
+            return result;
         }
 
         private string PublishMessages(int numberOfMessages, Action<int> PublishAction)

@@ -5,18 +5,16 @@ namespace Shared
 {
     public class MessageHandler : IMessageHandler<Message>
     {
-        private int messagesReceived = 0;
-        private List<MessageEvaluation> evaluations = new List<MessageEvaluation>();
+        private readonly List<MessageEvaluation> evaluations = [];
 
         public void Invoke(Message message)
         {
-            MessageEvaluation evaluation = new MessageEvaluation(message.Timestamp, DateTime.Now);
+            MessageEvaluation evaluation = new(message.Timestamp, DateTime.Now);
             evaluations.Add(evaluation);
             Console.WriteLine(
                 $"{message.MessageNumber}. Message | Sent: {evaluation.SentTimestamp} | Received: {evaluation.ReceivedTimestamp} | Latency: {evaluation.Latency}ms"
             );
-            ++messagesReceived;
-            if (messagesReceived == message.NumberOfMessages)
+            if (message.MessageNumber == message.NumberOfMessages)
             {
                 Console.WriteLine($"Latency Lower Quartile: {evaluations.LatencyLowerQuartile()}ms");
                 Console.WriteLine($"Latency Median: {evaluations.LatencyMedian()}ms");
@@ -26,7 +24,6 @@ namespace Shared
                 Console.WriteLine($"Throughput: {evaluations.Throughput()} Messages / s");
                 Console.WriteLine("---");
                 evaluations.Clear();
-                messagesReceived = 0;
             }
         }
     }
