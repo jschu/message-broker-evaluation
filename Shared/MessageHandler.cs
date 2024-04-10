@@ -11,11 +11,19 @@ namespace Shared
         {
             MessageEvaluation evaluation = new(message.Timestamp, DateTime.Now);
             evaluations.Add(evaluation);
-            Console.WriteLine(
-                $"{message.MessageNumber}. Message | Sent: {evaluation.SentTimestamp} | Received: {evaluation.ReceivedTimestamp} | Latency: {evaluation.Latency}ms"
-            );
+            if (message.MessageNumber == 1)
+            {
+                Console.WriteLine("Start receiving messages ...");
+            }
+            // Console.WriteLine(
+            //     $"{message.MessageNumber}. Message | Sent: {evaluation.SentTimestamp} | Received: {evaluation.ReceivedTimestamp} | Latency: {evaluation.Latency}ms"
+            // );
             if (message.MessageNumber == message.NumberOfMessages)
             {
+                Console.WriteLine("Received 100%");
+                Console.WriteLine("---");
+                Console.WriteLine($"Number of Messages: {message.NumberOfMessages}");
+                Console.WriteLine($"Total Duration: {evaluations.TotalDuration()}ms");
                 Console.WriteLine($"Latency Lower Quartile: {evaluations.LatencyLowerQuartile()}ms");
                 Console.WriteLine($"Latency Median: {evaluations.LatencyMedian()}ms");
                 Console.WriteLine($"Latency Upper Quartile: {evaluations.LatencyUpperQuartile()}ms");
