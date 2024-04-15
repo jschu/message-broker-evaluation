@@ -23,6 +23,7 @@ namespace Shared
                 Console.WriteLine("Received all messages");
                 Console.WriteLine("---");
                 Console.WriteLine($"Number of Messages: {message.NumberOfMessages}");
+                Console.WriteLine($"Message Size: {message.MessageSizeInKB}KB");
                 Console.WriteLine($"Total Duration: {evaluations.TotalDuration()}ms");
                 Console.WriteLine($"Latency Lower Quartile: {evaluations.LatencyLowerQuartile()}ms");
                 Console.WriteLine($"Latency Median: {evaluations.LatencyMedian()}ms");

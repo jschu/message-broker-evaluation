@@ -31,7 +31,7 @@ namespace PublisherService.Controllers
             var messageData = CreateMessageData(sizeOfMessageInKB);
             return PublishMessages(numberOfMessages, (messageIndex) =>
             {
-                var message = CreateMessage(messageIndex, numberOfMessages, messageData);
+                var message = CreateMessage(messageIndex, numberOfMessages, sizeOfMessageInKB, messageData);
                 messageBus.Publish<Message>(message);
             });
         }
@@ -50,7 +50,7 @@ namespace PublisherService.Controllers
             var messageData = CreateMessageData(sizeOfMessageInKB);
             var result = PublishMessages(numberOfMessages, (messageIndex) =>
             {
-                var message = CreateMessage(messageIndex, numberOfMessages, messageData);
+                var message = CreateMessage(messageIndex, numberOfMessages, sizeOfMessageInKB, messageData);
                 producer.ProduceAsync(Shared.Kafka.Constants.Topic, new Message<Null, Message> { Value = message });
             });
             producer.Flush();
@@ -65,7 +65,7 @@ namespace PublisherService.Controllers
             var messageData = CreateMessageData(sizeOfMessageInKB);
             var result = PublishMessages(numberOfMessages, (messageIndex) =>
             {
-                var message = CreateMessage(messageIndex, numberOfMessages, messageData);
+                var message = CreateMessage(messageIndex, numberOfMessages, sizeOfMessageInKB, messageData);
                 var serializedMessage = Shared.Redis.MessageSerializer.Serialize(message);
                 subscriber.PublishAsync(Shared.Redis.Constants.Channel, serializedMessage);
             });
@@ -89,9 +89,15 @@ namespace PublisherService.Controllers
             return $"Successfully published {numberOfMessages} messages";
         }
 
-        private Message CreateMessage(int messageIndex, int numberOfMessages, List<byte[]> messageData)
+        private Message CreateMessage(int messageIndex, int numberOfMessages, int messageSizeInKB, List<byte[]> messageData)
         {
-            return new Message(DateTime.Now, messageIndex + 1, numberOfMessages, messageData);
+            return new Message(
+                DateTime.Now,
+                messageIndex + 1,
+                numberOfMessages,
+                messageSizeInKB,
+                messageData
+            );
         }
 
         private List<byte[]> CreateMessageData(int sizeOfMessageInKB)
