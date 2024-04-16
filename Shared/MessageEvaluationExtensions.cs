@@ -6,7 +6,7 @@ namespace Shared
 {
     public static class MessageEvaluationExtensions
     {
-        private static readonly int precision = 4;
+        private static readonly int precision = 2;
         private static readonly int throughputPrecision = 2;
 
         public static double LatencyMedian(this IEnumerable<MessageEvaluation> evaluations)
